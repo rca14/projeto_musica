@@ -22,20 +22,46 @@ var allowCrossDomain = function (req: any, res: any, next: any) {
   res.header('Access-Control-Allow-Headers', 'Content-Type');
   next();
 }
-pmserver.use(allowCrossDomain);
+const fileUpload = require('express-fileupload');
+const path = require('path');
+const multer = require('multer')
 
+let storage = multer.diskStorage({
+  destination: function (req:any, file:any, cb:any) {
+      cb(null, './');
+  },
+  filename: function (req:any, file:any, cb:any) {
+      cb(null, file.originalname);
+  }
+});//Configure the place you will upload your file
+
+let upload = multer({ storage: storage });
+
+pmserver.use(allowCrossDomain);
+pmserver.use(fileUpload());
 pmserver.use(bodyParser.json());
 
+
 pmserver.get('/atual', function (req: express.Request, res: express.Response) {
-  res.send(resp);
+  res.send(JSON.stringify(resp));
 })
 
-pmserver.post('/atual', function (req: express.Request, res: express.Response) {
-  if (true) {
-    res.send({ "Success": "Arquivo MIDI carregado." });
-  } else {
-    res.send({ "failure": "Erro ao conver arquivo MIDI." });
-  }
+
+pmserver.post('/atual', function (req, res, next) {
+  //if (!req.file || Object.keys(req.file).length === 0) {
+  //  return res.status(400).send('No files were uploaded.');
+  //}
+//
+  // The name of the input field (i.e. "sampleFile") is used to retrieve the uploaded file
+  //let sampleFile = req.file.sampleFile;
+
+  // Use the mv() method to place the file somewhere on your server
+  //sampleFile.mv('/somewhere/on/your/server/filename.jpg', function(err: any) {
+  //  if (err)
+  //    return res.status(500).send(err);
+
+    res.send('File uploaded!');
+  //});
 })
 
 pmserver.put('/atual', function (req: express.Request, res: express.Response) {
