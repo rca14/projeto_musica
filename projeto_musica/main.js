@@ -1,13 +1,13 @@
 const model_url = "https://cdn.jsdelivr.net/gh/ml5js/ml5-data-and-models/models/pitch-detection/crepe/";
 const sleep = time => new Promise(resolve => setTimeout(resolve, time));
 const fases = ["beforeAll", "preparação", "escutando", "atualizando", "fim"]
-const Http = new XMLHttpRequest();
-const url = 'http://localhost:3000/atual';
-Http.open("GET", url);
-Http.send();
-Http.onreadystatechange = (e) => {
-    console.log(Http.responseText)
-}
+//const Http = new XMLHttpRequest();
+//const url = 'http://localhost:3000/atual';
+//Http.open("GET", url);
+//Http.send();
+//Http.onreadystatechange = (e) => {
+//    console.log(Http.responseText)
+//}
 
 let notas = [{ nota: "C3", frequencia: 261.64, time: 1000 }, { nota: "D3", frequencia: 293.68, time: 1000 }, { nota: "E3", frequencia: 329.64, time: 1000 },
 { nota: "F3", frequencia: 349.24, time: 1000 }, { nota: "G3", frequencia: 392.00, time: 1000 }, { nota: "A4", frequencia: 440.00, time: 1000 }, { nota: "B4", frequencia: 493.92, time: 1000 }];
@@ -22,15 +22,16 @@ let posicao = 0;
 let correto = false;
 let controle = false;
 let corretas = 0;
+let comeco = false;
 
 let MIDI;
 
-const start = document.getElementById("start");
-start.addEventListener('change', (e) => {
-    //esperar pra começar até clicar aqui
+const start = document.querySelector(".start");
+start.addEventListener('click', (e) => {
+    comeco = true;
 });
 
-const loadnotas = document.getElementById("loadnotas");
+const loadnotas = document.querySelector(".loadnotas");
 loadnotas.addEventListener('change', (e) => {
     getNotas();
 });
@@ -40,11 +41,12 @@ input.addEventListener('change', (e) => {
 
   const fd = new FormData();
   e.target.files.forEach((file) => {
-    fd.append(e.target.name, file, file.name);  
+    fd.append('file', file, file.name);  
   });
   
   MIDI = fd;
 
+  console.log("enviando")
   sendMIDI();
 });
 
@@ -74,13 +76,13 @@ function getNotas(){
 function sendMIDI(){
     var xhr = new XMLHttpRequest();
     xhr.open("POST", "http://localhost:3000/atual", true);
-
+    xhr.send(MIDI)
     xhr.onreadystatechange = function() {
         if(xhr.readyState == 4 && xhr.status == 200) {
             console.log(xhr.responseText);
         }
     }
-    xhr.send(MIDI);
+    //xhr.send(MIDI);
 }
 
 function setup() {
@@ -150,8 +152,14 @@ function mudaCor(i) {
 };
 
 async function draw() {
-    console.log(fases[fase]);
+    //console.log(fases[fase]);
     background(0);
+    while(true){
+        if(comeco == true){
+            break;
+        }
+        await sleep(1000)
+    }
     if (fases[fase] === "beforeAll") {
         textAlign(CENTER, CENTER);
         textSize(64);

@@ -26,6 +26,7 @@ const fileUpload = require('express-fileupload');
 const path = require('path');
 const multer = require('multer')
 
+
 let storage = multer.diskStorage({
   destination: function (req:any, file:any, cb:any) {
       cb(null, './');
@@ -38,8 +39,8 @@ let storage = multer.diskStorage({
 let upload = multer({ storage: storage });
 
 pmserver.use(allowCrossDomain);
-pmserver.use(fileUpload());
 pmserver.use(bodyParser.json());
+
 
 
 pmserver.get('/atual', function (req: express.Request, res: express.Response) {
@@ -47,21 +48,13 @@ pmserver.get('/atual', function (req: express.Request, res: express.Response) {
 })
 
 
-pmserver.post('/atual', function (req, res, next) {
-  //if (!req.file || Object.keys(req.file).length === 0) {
-  //  return res.status(400).send('No files were uploaded.');
-  //}
-//
-  // The name of the input field (i.e. "sampleFile") is used to retrieve the uploaded file
-  //let sampleFile = req.file.sampleFile;
-
-  // Use the mv() method to place the file somewhere on your server
-  //sampleFile.mv('/somewhere/on/your/server/filename.jpg', function(err: any) {
-  //  if (err)
-  //    return res.status(500).send(err);
-
+pmserver.post('/atual',upload.single('file'), function (req, res, next) {
+  if (!req.file || Object.keys(req.file).length === 0) {
+    return res.status(400).send('No files were uploaded.');
+  }
+    console.log(req.file);
     res.send('File uploaded!');
-  //});
+    
 })
 
 pmserver.put('/atual', function (req: express.Request, res: express.Response) {
