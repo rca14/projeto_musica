@@ -4,10 +4,16 @@ import { Midi } from '@tonejs/midi';
 import fs = require("fs");
 
 var pmserver = express();
-var file = fs.readFileSync("./DEMO.mid");
-var midi = new Midi(file);
-var temp = midi.tracks.filter((trk) => trk.instrument.name === "acoustic guitar (steel)");
-var resp = temp[0].notes.map(separaNota)
+var resp: any;
+var file: any;
+
+
+function extractNotas(){
+  //let file = fs.readFileSync("./DEMO.mid");
+  let midi = new Midi(file);
+  let temp = midi.tracks.filter((trk) => (trk.instrument.name === "acoustic guitar (steel)") || (trk.instrument.name === "acoustic guitar (nylon)"));
+  resp = temp[0].notes.map(separaNota)
+}
 
 function separaNota(nota: { name: any; time: any; duration: any; }) {
   var nome = nota.name;
@@ -53,8 +59,10 @@ pmserver.post('/atual',upload.single('file'), function (req, res, next) {
     return res.status(400).send('No files were uploaded.');
   }
     console.log(req.file);
+    let nomefile = req.file.filename;
+    file = fs.readFileSync(`./${nomefile}`)
+    extractNotas()
     res.send('File uploaded!');
-    
 })
 
 pmserver.put('/atual', function (req: express.Request, res: express.Response) {

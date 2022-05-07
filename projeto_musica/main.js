@@ -9,8 +9,7 @@ const fases = ["beforeAll", "preparação", "escutando", "atualizando", "fim"]
 //    console.log(Http.responseText)
 //}
 
-let notas = [{ nota: "C3", frequencia: 261.64, time: 1000 }, { nota: "D3", frequencia: 293.68, time: 1000 }, { nota: "E3", frequencia: 329.64, time: 1000 },
-{ nota: "F3", frequencia: 349.24, time: 1000 }, { nota: "G3", frequencia: 392.00, time: 1000 }, { nota: "A4", frequencia: 440.00, time: 1000 }, { nota: "B4", frequencia: 493.92, time: 1000 }];
+let notas = [];
 let color = "white";
 let fase = 0;
 let contador = 3;
