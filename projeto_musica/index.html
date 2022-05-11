@@ -2,16 +2,33 @@
 <html lang="en">
 
     <head>
-        <title>Projeto Música</title>
+        <title>GuitarMe - Computação Musical</title>
+        <link rel="stylesheet" type="text/css" href="styles.css" media="screen" />
         <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.4.1/p5.min.js"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.4.1/addons/p5.sound.min.js"></script>
         <script src="https://unpkg.com/ml5@latest/dist/ml5.min.js"></script>
     </head>
 
     <body>
+        <header>
+            <nav class="navbar">
+                <a class="navbar-item" href="#abrirModal">Descrição</a>
+                <a class="navbar-item" href="https://www.cifraclub.com.br/dicionario.acordes"  target="_blank">Dicionário de acordes</a>
+                <a class="navbar-item" href="https://freemidi.org/"  target="_blank">Get Midi Files</a>
+            </nav>
+            <h1 class="page-title">GuitarMe</h1>
+        </header>
+    
+        <div id="abrirModal" class="modal">
+            <a href="#fechar" title="Fechar" class="fechar">x</a>
+            <h2>Descrição</h2>
+            <p>Esta é uma simples descrição.</p>
+            <p>Aqui temos a descrição de uso do nosso projeto</p>
+        </div>
+
         <input type="file" name="my_files[]" multiple/>
         <button id="loadnotas" class="loadnotas">Load Notas</button>
         <button id="start" class="start">Start</button>
-        <script src="main.js"></script> -->
+        <script src="main.js"></script>
     </body>
 </html>
