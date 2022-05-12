@@ -1,6 +1,6 @@
-## GuitarME
+# GuitarME
 
-# Equipe
+## Equipe
 - Eduardo Luiz (els6)
 - Felipe França (faf2)
 - Pedro Arruda (phra)
@@ -8,7 +8,7 @@
 - Sheyla Lima (slls)
 
 
-# Como executar
+## Como executar
 
 - Rodando o servidor: 
   - Entrar na pasta pm-server
