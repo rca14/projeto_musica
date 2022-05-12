@@ -115,7 +115,17 @@ let comeco = false;
 //botões
 const start = document.querySelector(".start");
 start.addEventListener('click', (e) => {
+    noLoop();
     console.log('pimba')
+    bolas = [];
+    notaAtual = 0;
+    analisando = false;
+    correto = false;
+    parada = false;
+    corBarra = 'gray';
+    fase = 0;
+    contador = 3;
+    tocando = false;
     comeco = true;
     redraw();
 });
@@ -124,45 +134,45 @@ const loadnotas = document.querySelector(".loadnotas");
 loadnotas.addEventListener('click', (e) => {
     console.log('oi')
     getNotas();
-    notasParaGraficos(notas, notasReferencia);
 });
 
 const input = document.querySelector('input[type="file"]');
 input.addEventListener('change', (e) => {
-  //  blobToNoteSequence(e.target.files[0]).then((seq) => {
-  //      document.getElementById('mainPlayer').noteSequence = seq;
-   //     document.getElementById('mainVisualizer').noteSequence = seq;
-   // }).catch((reason) => {
-   //     alert('Failed to load MIDI file.');
-   //     console.error(reason);
+    //  blobToNoteSequence(e.target.files[0]).then((seq) => {
+    //      document.getElementById('mainPlayer').noteSequence = seq;
+    //     document.getElementById('mainVisualizer').noteSequence = seq;
+    // }).catch((reason) => {
+    //     alert('Failed to load MIDI file.');
+    //     console.error(reason);
     //});
 
-  const fd = new FormData();
-  e.target.files.forEach((file) => {
-    fd.append('file', file, file.name);  
-  });
-  
-  MIDI = fd;
+    const fd = new FormData();
+    e.target.files.forEach((file) => {
+        fd.append('file', file, file.name);
+    });
 
-  console.log("enviando")
-  sendMIDI();
+    MIDI = fd;
+
+    console.log("enviando")
+    sendMIDI();
 });
 
 //botões
 
 //Requests
-function getNotas(){
+function getNotas() {
     var xhr = new XMLHttpRequest();
-    
-    xhr.onreadystatechange = function() {
+
+    xhr.onreadystatechange = function () {
         if (this.readyState == 4 && this.status == 200) {
-                //console.log(xhr.responseText);
-                notas = JSON.parse(xhr.responseText);
-                console.log(notas);
-            } else {
-                console.error(xhr.statusText);
-            }   
+            //console.log(xhr.responseText);
+            notas = JSON.parse(xhr.responseText);
+            notasConvertidas = notasParaGraficos(notas, notasReferencia);
+            console.log(notas);
+        } else {
+            console.error(xhr.statusText);
         }
+    }
 
     xhr.onerror = function (e) {
         console.error(xhr.statusText);
@@ -172,12 +182,12 @@ function getNotas(){
     xhr.send(null);
 }
 
-function sendMIDI(){
+function sendMIDI() {
     var xhr = new XMLHttpRequest();
     xhr.open("POST", "http://localhost:3000/atual", true);
     xhr.send(MIDI)
-    xhr.onreadystatechange = function() {
-        if(xhr.readyState == 4 && xhr.status == 200) {
+    xhr.onreadystatechange = function () {
+        if (xhr.readyState == 4 && xhr.status == 200) {
             console.log(xhr.responseText);
         }
     }
@@ -233,8 +243,8 @@ function gotPitch(error, frequency) {
 };
 
 function draw() {
-    if(comeco == true){
-    background('brown');
+    if (comeco == true) {
+        background('brown');
         if (fases[fase] === "beforeAll") {
             beforeAll();
         } else if (fases[fase] === "preparação") {
@@ -251,13 +261,11 @@ function desenhaNotas() {
     linhas();
     barra();
     //if (!tocando && tempoReferencia >= 1100) {
-     //   tocaMidi();
+    //   tocaMidi();
     //    tocando = true;
     //}
     if (notaAtual < notasConvertidas.length) {
         if (tempoReferencia >= notasConvertidas[notaAtual].tempo) {
-            console.log(notaAtual);
-            console.log(notasConvertidas.length);
             let temp = notasConvertidas[notaAtual];
             bolas.push(new bola(temp.x, 25, temp.nota, temp.casa, temp.duracao, 11));
             notaAtual++;

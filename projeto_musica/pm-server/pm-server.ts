@@ -8,18 +8,18 @@ var resp: any;
 var file: any;
 
 
-function extractNotas(){
+function extractNotas() {
   //let file = fs.readFileSync("./DEMO.mid");
   let midi = new Midi(file);
   let temp = midi.tracks.filter((trk) => (trk.instrument.name === "acoustic guitar (steel)") || (trk.instrument.name === "acoustic guitar (nylon)"));
   resp = temp[0].notes.map(separaNota)
 }
 
-function separaNota(nota: { name: any; time: any; duration: any; }) {
-  var nome = nota.name;
-  var tempo = nota.time;
-  var duracao = nota.duration;
-  return { nome, tempo, duracao }
+function separaNota(note: { name: any; time: any; duration: any; }) {
+  var nota = note.name;
+  var tempo = note.time * 1000;
+  var duracao = note.duration * 1000;
+  return { nota, tempo, duracao }
 }
 
 var allowCrossDomain = function (req: any, res: any, next: any) {
@@ -34,11 +34,11 @@ const multer = require('multer')
 
 
 let storage = multer.diskStorage({
-  destination: function (req:any, file:any, cb:any) {
-      cb(null, './');
+  destination: function (req: any, file: any, cb: any) {
+    cb(null, './');
   },
-  filename: function (req:any, file:any, cb:any) {
-      cb(null, file.originalname);
+  filename: function (req: any, file: any, cb: any) {
+    cb(null, file.originalname);
   }
 });//Configure the place you will upload your file
 
@@ -54,15 +54,15 @@ pmserver.get('/atual', function (req: express.Request, res: express.Response) {
 })
 
 
-pmserver.post('/atual',upload.single('file'), function (req, res, next) {
+pmserver.post('/atual', upload.single('file'), function (req, res, next) {
   if (!req.file || Object.keys(req.file).length === 0) {
     return res.status(400).send('No files were uploaded.');
   }
-    console.log(req.file);
-    let nomefile = req.file.filename;
-    file = fs.readFileSync(`./${nomefile}`)
-    extractNotas()
-    res.send('File uploaded!');
+  console.log(req.file);
+  let nomefile = req.file.filename;
+  file = fs.readFileSync(`./${nomefile}`)
+  extractNotas()
+  res.send('File uploaded!');
 })
 
 pmserver.put('/atual', function (req: express.Request, res: express.Response) {
